@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Browsing Insight - Dashboard</title>
+    <link rel="stylesheet" href="styles/main.css">
+
+</head>
+
+<body>
+    <nav class="sidebar">
+        <div class="logo">
+            <div style="width: 24px; height: 24px; background: var(--primary-color); border-radius: 6px;"></div>
+            Insight
+        </div>
+        <div class="nav-item active" data-tab="overview">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            总览
+        </div>
+        <div class="nav-item" data-tab="history">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            历史明细
+        </div>
+        <div class="nav-item" data-tab="settings">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path
+                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                </path>
+            </svg>
+            设置
+        </div>
+    </nav>
+
+    <!-- MAIN VIEW -->
+    <main class="main" id="view-overview">
+        <!-- HEADER -->
+        <div class="header-controls layout-section">
+            <h2>Insight Dashboard</h2>
+            <div class="date-controls-wrapper"
+                style="display: flex; gap: 10px; align-items: center; padding: 4px; border-radius: 4px; border: 1px solid var(--border-light);">
+                <select class="date-selector" id="range-type" style="width: 80px;">
+                    <option value="month">月度</option>
+                    <option value="week">周度</option>
+                    <option value="day">日度</option>
+                    <option value="year">年度</option>
+                    <option value="all">全部</option>
+                </select>
+                <div style="width: 1px; height: 20px; background: var(--border-light);"></div>
+                <input type="month" id="picker-month" class="date-selector" style="display: block; width: 140px;">
+                <input type="week" id="picker-week" class="date-selector" style="display: none; width: 140px;">
+                <input type="date" id="picker-day" class="date-selector" style="display: none; width: 140px;">
+                <select id="picker-year" class="date-selector" style="display: none; width: 140px;"></select>
+            </div>
+        </div>
+
+        <!-- SECTION 1: STATISTICS (Original Data) -->
+        <section id="section-stats" class="layout-section">
+            <div class="card-title" style="margin-bottom: 20px;">📊 基础数据统计</div>
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-title">总访问页面</div>
+                    <div class="stat-big" id="total-visits">0</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">活跃天数</div>
+                    <div class="stat-big" id="active-days">0</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">最常访问</div>
+                    <div class="stat-big"
+                        style="font-size: 1.5rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                        id="top-domain">-</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DIVIDER -->
+        <hr class="section-divider">
+
+        <!-- SECTION 2: AI REPORT (Clean Container) -->
+        <section id="section-report" class="layout-section">
+            <div class="report-container">
+                <div class="report-header">
+                    <div class="report-title" id="report-title">AI 浏览行为分析报告</div>
+                    <div class="report-meta" id="report-meta--period">分析周期: ...</div>
+                </div>
+
+                <!-- AI Summary Text -->
+                <div id="ai-summary-container">
+                    <div id="ai-summary-content" class="ai-summary-text">
+                        <span style="color: var(--text-secondary);">✨ System initializing... AI Agent
+                            connecting...</span>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="chart-grid">
+                    <!-- Row 1 -->
+                    <div class="chart-full-row">
+                        <div class="chart-box">
+                            <div class="chart-box-title">① 时段分布 (24H)</div>
+                            <div id="time-chart-placeholder" style="height: 200px;"></div>
+                        </div>
+                        <div class="chart-box">
+                            <div class="chart-box-title">② 周律分析 (Week)</div>
+                            <div id="week-chart-placeholder" style="height: 200px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Row 2 -->
+                    <div class="chart-box">
+                        <div class="chart-box-title">③ 兴趣分布 (Categorization)</div>
+                        <div id="chart-pie"
+                            style="height: 180px; display:flex; justify-content:center; align-items:center;">
+                            <span style="color:#eee; font-size:12px;">等待 AI 分析</span>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-box-title">④ 核心关键词 (Keywords)</div>
+                        <div id="chart-cloud"
+                            style="height: 180px; display: flex; flex-wrap: wrap; gap: 5px; align-content: center; justify-content:center;">
+                            <span style="color:#eee; font-size:12px;">等待 AI 分析</span>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-box-title">⑤ 效能指数 (Productivity)</div>
+                        <div id="chart-gauge"
+                            style="height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div id="prod-score" style="font-size: 48px; font-weight: bold; color: var(--border-base);">
+                                --</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer List -->
+                <div style="margin-top: 30px; border-top: 1px solid var(--border-light); padding-top: 20px;">
+                    <div class="card-title">热门网站 Top 10 Detail</div>
+                    <div id="top-sites-summary" class="ai-summary-text" style="display: none;"></div>
+                    <div id="top-sites-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px 40px;">
+                    </div>
+                </div>
+
+                <!-- FINAL ADVICE -->
+                <div id="section-advice" style="margin-top: 30px; display: none;">
+                    <div class="card-title">💡 综合建议</div>
+                    <div id="advice-content" class="ai-summary-text"></div>
+                </div>
+
+                <div style="text-align: right; margin-top: 20px;">
+                    <button id="regenerate-btn" class="btn-primary" style="font-size: 12px;">↺ 重新生成报告</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    </main>
+
+    <!-- HISTORY VIEW -->
+    <main class="main" id="view-history" style="display: none;">
+        <div class="header-controls layout-section">
+            <h2>访问历史明细</h2>
+            <div class="date-controls-wrapper"
+                style="display: flex; gap: 10px; align-items: center; padding: 4px; border-radius: 4px; border: 1px solid var(--border-light);">
+                <select class="date-selector" id="history-range-type" style="width: 80px;">
+                    <option value="month">月度</option>
+                    <option value="week">周度</option>
+                    <option value="day">日度</option>
+                    <option value="year">年度</option>
+                    <option value="all">全部</option>
+                </select>
+                <div style="width: 1px; height: 20px; background: var(--border-light);"></div>
+                <input type="month" id="history-picker-month" class="date-selector"
+                    style="display: block; width: 140px;">
+                <input type="week" id="history-picker-week" class="date-selector" style="display: none; width: 140px;">
+                <input type="date" id="history-picker-day" class="date-selector" style="display: none; width: 140px;">
+                <select id="history-picker-year" class="date-selector" style="display: none; width: 140px;"></select>
+            </div>
+        </div>
+        <div class="card" style="margin-top: 20px;">
+            <!-- Scrollable Table Container -->
+            <div
+                style="max-height: 60vh; overflow-y: auto; overflow-x: hidden; border-bottom: 1px solid var(--border-light);">
+                <table class="history-table"
+                    style="width: 100%; border-collapse: collapse; color: var(--text-secondary);">
+                    <thead style="position: sticky; top: 0; background: var(--surface-blur); z-index: 10;">
+                        <tr style="border-bottom: 1px solid var(--border-light); text-align: left;">
+                            <th style="padding: 10px;">域名</th>
+                            <th style="padding: 10px;">预估累计时长</th>
+                            <th style="padding: 10px;">访问次数</th>
+                            <th style="padding: 10px;">最后访问</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body">
+                        <!-- Javascript will populate this -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination Controls (Outside Scroll Area) -->
+            <div class="pagination-controls"
+                style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--surface-blur);">
+                <div style="font-size: 12px; color: var(--text-secondary);">
+                    显示 <span id="page-info-start">0</span> - <span id="page-info-end">0</span> 条，共 <span
+                        id="page-info-total">0</span> 条
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <select id="page-size-select"
+                        style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-base); padding: 4px; border-radius: 4px;">
+                        <option value="20">20条/页</option>
+                        <option value="50">50条/页</option>
+                        <option value="100">100条/页</option>
+                        <option value="500">500条/页</option>
+                    </select>
+                    <button id="btn-prev-page" class="btn-primary" style="padding: 4px 12px;" disabled>上一页</button>
+                    <span id="page-number-display" style="color: var(--text-primary); font-size: 12px;">1</span>
+                    <button id="btn-next-page" class="btn-primary" style="padding: 4px 12px;" disabled>下一页</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- SETTINGS VIEW (Overlay or Separate) -->
+    <main class="main settings-panel" id="view-settings">
+        <h2>设置</h2>
+        <div class="card" style="max-width: 600px; margin-top: 2rem;">
+            <div class="input-group">
+                <label class="input-label">API Base URL</label>
+                <input type="text" id="api-url-input" class="input-field" placeholder="https://api.openai.com/v1">
+                <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;">OpenAI 格式的接口地址</p>
+            </div>
+            <div class="input-group">
+                <label class="input-label">API Key</label>
+                <input type="password" id="api-key-input" class="input-field" placeholder="sk-...">
+            </div>
+            <div class="input-group">
+                <label class="input-label">模型名称 (Model)</label>
+                <input type="text" id="api-model-input" class="input-field" placeholder="gpt-3.5-turbo">
+            </div>
+            <button id="save-settings" class="btn-primary">保存设置</button>
+            <div id="save-status" style="margin-top: 1rem; color: var(--accent-color);"></div>
+        </div>
+    </main>
+
+    <script src="services/ai.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+
+</html>

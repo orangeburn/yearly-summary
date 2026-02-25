@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Browsing Insight</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    body {
+      width: 320px;
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem;
+      box-sizing: border-box;
+    }
+    .header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .logo-text {
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .stats-preview {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      background: var(--surface-color);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+    .stat-value {
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .actions {
+      margin-top: auto;
+    }
+    .btn-full {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo-text">AI Browsing Insight</div>
+    <p style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.875rem;">您的智能浏览助手</p>
+  </div>
+
+  <div class="stats-preview">
+    <!-- Populated by JS -->
+    <div class="stat-item">
+      <span class="stat-label">今日浏览</span>
+      <span class="stat-value" id="today-count">...</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">本月浏览</span>
+      <span class="stat-value" id="month-count">...</span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button id="open-dashboard" class="btn-primary btn-full">
+      查看详细报告
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
